@@ -1,14 +1,17 @@
+using System.Linq;
 using TMPro;
 using UnityEngine;
 public class Column : MonoBehaviour
 {
     private GameObject[] Fields = null;
+    private int[] Points;
     private PointField[] PointFields;
     private Column NextColumn = null;
     private bool IsEndColumn = false;
     [SerializeField] private GameObject NameText;
     [SerializeField] private PointField PointsField;
     [SerializeField] private GameObject TotalField;
+    private TMP_Text TotalText;
     public void SetGameRounds(uint rounds)
     {
         if (Fields != null) throw new System.Exception();
@@ -19,11 +22,15 @@ public class Column : MonoBehaviour
             Fields[i] = Instantiate(PointsField.gameObject, transform);
         }
         Fields[rounds + 1] = Instantiate(TotalField, transform);
+        TotalText = Fields[rounds + 1].GetComponentsInChildren<TMP_Text>().Where(i => i.text != "Total").First();
         BuildRows();
         PointFields = new PointField[rounds];
-        for (int i = 0; i < rounds; i++)
+        Points = new int[rounds];
+        for (uint i = 0; i < rounds; i++)
         {
             PointFields[i] = Fields[i + 1].GetComponent<PointField>();
+            PointFields[i].Round = i;
+            PointFields[i].ListenToPointUpdate(SetPointsIn);
         }
     }
     public void SetNextColumn(Column next, bool isEnd)
@@ -38,7 +45,7 @@ public class Column : MonoBehaviour
             if (IsEndColumn)
             {
                 PointFields[i].Tricks.Next = NextColumn.GetNextPointInputField(i);
-                if (i != PointFields.Length-1)
+                if (i != PointFields.Length - 1)
                 {
                     PointFields[i].Points.Next = NextColumn.GetNextTrickInputField(i + 1);
                 }
@@ -50,6 +57,11 @@ public class Column : MonoBehaviour
             }
         }
 
+    }
+    private void SetPointsIn(uint round, int points)
+    {
+        Points[round] = points;
+        TotalText.text = Points.Sum().ToString();
     }
     private InputField GetNextPointInputField(int row) => PointFields[row].Points;
     private InputField GetNextTrickInputField(int row) => PointFields[row].Tricks;
