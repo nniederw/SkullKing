@@ -214,7 +214,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ColumnPrefab: {fileID: -1216466529655039071, guid: 77222f6398b72a84ab4abab0d5af871c, type: 3}
   ForceUpdate: 0
-  NumberofPlayers: 3
+  NumberofPlayers: 6
   GameRounds: 10
 --- !u!1 &519420028
 GameObject:
@@ -532,6 +532,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit
