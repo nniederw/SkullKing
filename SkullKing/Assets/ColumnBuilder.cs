@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 [RequireComponent(typeof(RectTransform))]
 public class ColumnBuilder : MonoBehaviour
@@ -16,9 +17,13 @@ public class ColumnBuilder : MonoBehaviour
         if (ForceUpdate)
         {
             ForceUpdate = false;
-            DestroyColumns();
-            BuildColumns();
+            RebuildColumns();
         }
+    }
+    private void RebuildColumns()
+    {
+        DestroyColumns();
+        BuildColumns();
     }
     private void DestroyColumns()
     {
@@ -46,9 +51,26 @@ public class ColumnBuilder : MonoBehaviour
             Columns[i].SetNextColumn(Columns[i + 1], false);
         }
         Columns[NumberofPlayers - 1].SetNextColumn(Columns[0], true);
-        foreach(var c in Columns)
+        foreach (var c in Columns)
         {
             c.SetNextSelect();
         }
+    }
+    public void ResetPoints()
+    {
+        foreach (var col in Columns)
+        {
+            col.ResetPoints();
+        }
+    }
+    public void SetNumberOfPlayers(string players)
+    {
+        try { SetNumberOfPlayers(Convert.ToUInt32(players)); }
+        catch { }
+    }
+    public void SetNumberOfPlayers(uint players)
+    {
+        NumberofPlayers = players;
+        RebuildColumns();
     }
 }

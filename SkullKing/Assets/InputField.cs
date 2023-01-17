@@ -30,4 +30,8 @@ public class InputField : MonoBehaviour
             SelectNext();
         }
     }
+    public void ResetPoints()
+    {
+        ThisField.SetTextWithoutNotify("");
+    }
 }
