@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 62085473}
   - component: {fileID: 62085475}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Column Builder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -973,7 +973,7 @@ GameObject:
   - component: {fileID: 1670269504}
   - component: {fileID: 1670269503}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: Board
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

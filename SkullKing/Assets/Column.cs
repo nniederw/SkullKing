@@ -90,5 +90,7 @@ public class Column : MonoBehaviour
         {
             pf.ResetPoints();
         }
+        Points = new int[Points.Length];
+        TotalText.text = Points.Sum().ToString();
     }
 }
