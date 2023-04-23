@@ -22,8 +22,12 @@ public class ColumnBuilder : MonoBehaviour
     }
     private void RebuildColumns()
     {
+        var time = DateTime.Now;
         DestroyColumns();
+        Debug.Log($"time to destroy: {(DateTime.Now-time).TotalMilliseconds} ms");
+        time = DateTime.Now;
         BuildColumns();
+        Debug.Log($"time to build: {(DateTime.Now-time).TotalMilliseconds} ms");
     }
     private void DestroyColumns()
     {
@@ -44,7 +48,9 @@ public class ColumnBuilder : MonoBehaviour
             rect.anchorMin = new Vector2(anchleft, 0f);
             anchleft += width;
             rect.anchorMax = new Vector2(anchleft, 1f);
+            var time = DateTime.Now;
             Columns[i].SetGameRounds(GameRounds);
+            Debug.Log($"time to one Column: {(DateTime.Now - time).TotalMilliseconds} ms");
         }
         for (int i = 0; i < NumberofPlayers - 1; i++)
         {
