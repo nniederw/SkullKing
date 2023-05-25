@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 [RequireComponent(typeof(RectTransform))]
 public class ColumnBuilder : MonoBehaviour
@@ -16,9 +17,17 @@ public class ColumnBuilder : MonoBehaviour
         if (ForceUpdate)
         {
             ForceUpdate = false;
-            DestroyColumns();
-            BuildColumns();
+            RebuildColumns();
         }
+    }
+    private void RebuildColumns()
+    {
+        //var time = DateTime.Now;
+        DestroyColumns();
+       // Debug.Log($"time to destroy: {(DateTime.Now-time).TotalMilliseconds} ms");
+        //time = DateTime.Now;
+        BuildColumns();
+        //Debug.Log($"time to build: {(DateTime.Now-time).TotalMilliseconds} ms");
     }
     private void DestroyColumns()
     {
@@ -39,16 +48,35 @@ public class ColumnBuilder : MonoBehaviour
             rect.anchorMin = new Vector2(anchleft, 0f);
             anchleft += width;
             rect.anchorMax = new Vector2(anchleft, 1f);
+            //var time = DateTime.Now;
             Columns[i].SetGameRounds(GameRounds);
+            //Debug.Log($"time to one Column: {(DateTime.Now - time).TotalMilliseconds} ms");
         }
         for (int i = 0; i < NumberofPlayers - 1; i++)
         {
             Columns[i].SetNextColumn(Columns[i + 1], false);
         }
         Columns[NumberofPlayers - 1].SetNextColumn(Columns[0], true);
-        foreach(var c in Columns)
+        foreach (var c in Columns)
         {
             c.SetNextSelect();
         }
+    }
+    public void ResetPoints()
+    {
+        foreach (var col in Columns)
+        {
+            col.ResetPoints();
+        }
+    }
+    public void SetNumberOfPlayers(string players)
+    {
+        try { SetNumberOfPlayers(Convert.ToUInt32(players)); }
+        catch { }
+    }
+    public void SetNumberOfPlayers(uint players)
+    {
+        NumberofPlayers = players;
+        RebuildColumns();
     }
 }

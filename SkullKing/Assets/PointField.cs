@@ -25,5 +25,9 @@ public class PointField : MonoBehaviour
         if (Points == null) throw new System.Exception();
         if (Tricks == null) throw new System.Exception();
     }
-
+    public void ResetPoints()
+    {
+        Points.ResetPoints();
+        Tricks.ResetPoints();
+    }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -40,6 +41,7 @@ public class Column : MonoBehaviour
     }
     public void SetNextSelect()
     {
+        Fields[0].GetComponent<InputField>().Next = NextColumn.Fields[0].GetComponent<InputField>();
         for (int i = 0; i < PointFields.Length; i++)
         {
             if (IsEndColumn)
@@ -81,5 +83,14 @@ public class Column : MonoBehaviour
     void Start()
     {
         if (Fields == null) throw new System.Exception();
+    }
+    public void ResetPoints()
+    {
+        foreach (var pf in PointFields)
+        {
+            pf.ResetPoints();
+        }
+        Points = new int[Points.Length];
+        TotalText.text = Points.Sum().ToString();
     }
 }
