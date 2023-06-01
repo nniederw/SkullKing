@@ -18,10 +18,6 @@ public class InputField : MonoBehaviour
         {
             Next.ThisField.Select();
         }
-        else
-        {
-            Debug.Log("Next was Null");
-        }
     }
     private void ValueUpdated(string s)
     {

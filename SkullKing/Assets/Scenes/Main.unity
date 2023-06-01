@@ -212,6 +212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ffa8df6090db7142933ada1fdf270ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RoundColumn: {fileID: -8763777584565350002, guid: f0f30fce67163ab49aa2c8b7cd6190a3, type: 3}
   ColumnPrefab: {fileID: -1216466529655039071, guid: 77222f6398b72a84ab4abab0d5af871c, type: 3}
   ForceUpdate: 0
   NumberofPlayers: 4

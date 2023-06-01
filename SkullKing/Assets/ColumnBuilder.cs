@@ -1,13 +1,16 @@
 using System;
 using UnityEngine;
+using System.Linq;
 [RequireComponent(typeof(RectTransform))]
 public class ColumnBuilder : MonoBehaviour
 {
-    [SerializeField] Column ColumnPrefab;
+    [SerializeField] Column RoundColumn;
+    [SerializeField] PointsColumn ColumnPrefab;
     [SerializeField] bool ForceUpdate = false;
     [SerializeField] uint NumberofPlayers = 3;
     [SerializeField] uint GameRounds = 10;
     private Column[] Columns = new Column[0];
+    private PointsColumn[] PointsColumns = new PointsColumn[0];
     void Start()
     {
         ForceUpdate = true;
@@ -24,7 +27,7 @@ public class ColumnBuilder : MonoBehaviour
     {
         //var time = DateTime.Now;
         DestroyColumns();
-       // Debug.Log($"time to destroy: {(DateTime.Now-time).TotalMilliseconds} ms");
+        // Debug.Log($"time to destroy: {(DateTime.Now-time).TotalMilliseconds} ms");
         //time = DateTime.Now;
         BuildColumns();
         //Debug.Log($"time to build: {(DateTime.Now-time).TotalMilliseconds} ms");
@@ -38,33 +41,38 @@ public class ColumnBuilder : MonoBehaviour
     }
     private void BuildColumns()
     {
-        Columns = new Column[NumberofPlayers];
-        float width = 1f / NumberofPlayers;
-        float anchleft = 0f;
+        Columns = new Column[NumberofPlayers + 1];
+        PointsColumns = new PointsColumn[NumberofPlayers];
+        Columns[0] = Instantiate(RoundColumn.gameObject, transform).GetComponent<Column>();//TODO check if .gameObject is needed
         for (int i = 0; i < NumberofPlayers; i++)
         {
-            Columns[i] = Instantiate(ColumnPrefab.gameObject, transform).GetComponent<Column>();
+            PointsColumns[i] = Instantiate(ColumnPrefab.gameObject, transform).GetComponent<PointsColumn>();
+            Columns[i + 1] = PointsColumns[i];
+        }
+        float width = 1f / Columns.Sum(i => i.RelativeSize);
+        float anchleft = 0f;
+
+        for (int i = 0; i < Columns.Length; i++)
+        {
             var rect = Columns[i].GetComponent<RectTransform>();
             rect.anchorMin = new Vector2(anchleft, 0f);
-            anchleft += width;
+            anchleft += width * Columns[i].RelativeSize;
             rect.anchorMax = new Vector2(anchleft, 1f);
-            //var time = DateTime.Now;
             Columns[i].SetGameRounds(GameRounds);
-            //Debug.Log($"time to one Column: {(DateTime.Now - time).TotalMilliseconds} ms");
         }
-        for (int i = 0; i < NumberofPlayers - 1; i++)
+        for (int i = 0; i < PointsColumns.Length - 1; i++)
         {
-            Columns[i].SetNextColumn(Columns[i + 1], false);
+            PointsColumns[i].SetNextColumn(PointsColumns[i + 1], false);
         }
-        Columns[NumberofPlayers - 1].SetNextColumn(Columns[0], true);
-        foreach (var c in Columns)
+        PointsColumns.Last().SetNextColumn(PointsColumns.First(), true);
+        foreach (var col in PointsColumns)
         {
-            c.SetNextSelect();
+            col.SetNextSelect();
         }
     }
     public void ResetPoints()
     {
-        foreach (var col in Columns)
+        foreach (var col in PointsColumns)
         {
             col.ResetPoints();
         }
