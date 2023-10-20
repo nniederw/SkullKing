@@ -8,9 +8,9 @@ public class PointsColumn : Column
     private PointsColumn NextColumn = null;
     private bool IsEndColumn = false;
     [SerializeField] private GameObject NameText;
-    [SerializeField] private GameObject PointsField; //TODO replace with Field
     [SerializeField] private GameObject TotalField;
     private TMP_Text TotalPointsText;
+
     protected override GameObject FirstField => NameText;
     protected override GameObject LastField => TotalField;
     protected override void FinishSetup()

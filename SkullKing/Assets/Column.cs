@@ -11,6 +11,7 @@ public class Column : MonoBehaviour
     protected virtual void FinishSetup() { }
     public void SetGameRounds(uint rounds)
     {
+
         if (Fields != null) throw new System.Exception("Fields was already set");
         Fields = new GameObject[rounds + 2];
         Fields[0] = Instantiate(FirstField, transform);

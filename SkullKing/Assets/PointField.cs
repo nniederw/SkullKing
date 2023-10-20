@@ -20,6 +20,15 @@ public class PointField : MonoBehaviour
                 catch { action(Round, 0); }
             });
     }
+    public void ListenToTrickUpdate(Action<uint,uint> action)
+    {
+        Points.GetComponent<TMP_InputField>()
+            .onValueChanged.AddListener(i =>
+            {
+                try { action(Round, Convert.ToUInt32(i)); }
+                catch { action(Round, 0); }
+            });
+    }
     private void Start()
     {
         if (Points == null) throw new System.Exception($"{nameof(Points)} was null");
