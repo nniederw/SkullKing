@@ -9,6 +9,7 @@ public class Table : MonoBehaviour
     public static int Rounds = 10;
     public GameObject PointField;
     public GameObject RoundField;
+    public GameObject NameField;
     TableElement[,] Elements;
     //Dictionary<TableElement, (int i, int j)> ElementIndex = new Dictionary<TableElement, (int i, int j)>();
     private void Start()
@@ -18,7 +19,15 @@ public class Table : MonoBehaviour
     private void UpdateTableElements()
     {
         //ResetIndex();
-        Parallel.ForEach(Elements.Cast<TableElement>(), (TableElement i) => i.OnLocationUpdate());
+        for (int i = 0; i < Elements.GetLength(0); i++)
+        {
+            for (int j = 0; j < Elements.GetLength(1); j++)
+            {
+                Elements[i, j].OnLocationUpdate(i, j);
+            }
+        }
+
+        //Parallel.ForEach(Elements.Cast<TableElement>(), (TableElement i) => i.OnLocationUpdate());
     }
     /*private void ResetIndex()
     {
@@ -55,17 +64,17 @@ public class Table : MonoBehaviour
         }
         for (int j = 0; j < l1; j++) //height
         {
-            float sum = 0;
+            float sum = 0f;
             for (int i = 0; i < l0; i++)
             {
                 sum += Elements[i, j].RelativeHeight();
             }
-            float last = 0f;
+            float last = 1f; // needs to be reversed to go from top to bottom
             for (int i = 0; i < l0; i++)
             {
-                anchmin[i, j] = anchmin[i, j].SetY(last);
-                last += Elements[i, j].RelativeHeight() / sum;
                 anchmax[i, j] = anchmax[i, j].SetY(last);
+                last -= Elements[i, j].RelativeHeight() / sum;
+                anchmin[i, j] = anchmin[i, j].SetY(last);
             }
         }
         for (int i = 0; i < l0; i++)
@@ -113,6 +122,6 @@ public interface TableElement
     public void Initialize(int posi, int posj, Func<int, int, TableElement> getElementAt);
     public float RelativeWidth();
     public float RelativeHeight();
-    public void OnLocationUpdate();
+    public void OnLocationUpdate(int newPosi, int newPosj);
     public void SetRectAnchor(Vector2 min, Vector2 max);
 }

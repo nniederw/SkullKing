@@ -1,18 +1,15 @@
 using System;
 using UnityEngine;
-[RequireComponent(typeof(RectTransform))]
-public class PointsTableElement : MonoBehaviour, TableElement
+public class NameField : MonoBehaviour, TableElement
 {
     private RectTransform _RectTransform;
     private RectTransform RectTransform
     {
         get
         {
-            if (_RectTransform != null)
-            {
-                return _RectTransform;
-            }
-            _RectTransform = GetComponent<RectTransform>(); return _RectTransform;
+            if (_RectTransform != null) return _RectTransform;
+            _RectTransform = GetComponent<RectTransform>();
+            return _RectTransform;
         }
     }
     private Func<int, int, TableElement> GetElementAt;
@@ -31,5 +28,9 @@ public class PointsTableElement : MonoBehaviour, TableElement
         RectTransform.anchorMin = min;
         RectTransform.anchorMax = max;
     }
-    public void OnLocationUpdate(int newPosi, int newPosj) { }
+    public void OnLocationUpdate(int newPosi, int newPosj)
+    {
+        Posi = newPosi;
+        Posj = newPosj;
+    }
 }
