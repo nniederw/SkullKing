@@ -10,6 +10,7 @@ public class Table : MonoBehaviour
     public GameObject PointField;
     public GameObject RoundField;
     public GameObject NameField;
+    public GameObject EmptyField; //Todo add
     TableElement[,] Elements;
     //Dictionary<TableElement, (int i, int j)> ElementIndex = new Dictionary<TableElement, (int i, int j)>();
     private void Start()
@@ -87,6 +88,12 @@ public class Table : MonoBehaviour
     }
     private void BuildTable()
     {
+        Queue<TableElement> NameFields = new Queue<TableElement>(Players);
+        for (int i = 0; i < Players; i++)
+        {
+            NameFields.Enqueue(Instantiate(NameField, transform).GetComponent<TableElement>());
+            if (NameFields.Last() == null) throw new Exception($"{nameof(NameField)} seems to have no {nameof(TableElement)} Component");
+        }
         Queue<TableElement> RoundFields = new Queue<TableElement>(Rounds);
         for (int i = 0; i < Rounds; i++)
         {
@@ -99,13 +106,21 @@ public class Table : MonoBehaviour
             PointFields.Enqueue(Instantiate(PointField, transform).GetComponent<TableElement>());
             if (PointFields.Last() == null) throw new Exception($"{nameof(PointField)} seems to have no {nameof(TableElement)} Component");
         }
-        Elements = new TableElement[Rounds, Players + 1];
-        for (int i = 0; i < Rounds; i++)
+        Elements = new TableElement[Rounds + 1, Players + 1];
+        Elements[0, 0] = Instantiate(EmptyField, transform).GetComponent<TableElement>();
+        Elements[0, 0].Initialize(0, 0, GetElementAt);
+        if (Elements[0, 0] == null) throw new Exception($"{nameof(EmptyField)} has no {nameof(TableElement)}");
+        for (int i = 1; i < Players + 1; i++)
+        {
+            Elements[0, i] = NameFields.Dequeue();
+            Elements[0, i].Initialize(0, i, GetElementAt);
+        }
+        for (int i = 1; i < Rounds + 1; i++)
         {
             Elements[i, 0] = RoundFields.Dequeue();
             Elements[i, 0].Initialize(i, 0, GetElementAt);
         }
-        for (int i = 0; i < Rounds; i++)
+        for (int i = 1; i < Rounds + 1; i++)
         {
             for (int j = 1; j < Players + 1; j++)
             {

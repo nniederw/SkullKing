@@ -405,6 +405,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PointField: {fileID: 5848665956930782100, guid: 126906144e4207f49afbcd24ab00b536, type: 3}
   RoundField: {fileID: 5848665956930782100, guid: 1ddaee927fba69d4aa4d329abaff757f, type: 3}
+  NameField: {fileID: 5048815743982777993, guid: 69c0578c040931c47868e53283e59e2c, type: 3}
+  EmptyField: {fileID: 5048815743982777993, guid: 35366bba570a1af4d87b62520ce7b3dc, type: 3}
 --- !u!1 &614820861
 GameObject:
   m_ObjectHideFlags: 0

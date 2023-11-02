@@ -34,7 +34,7 @@ public class RoundTableElement : MonoBehaviour, TableElement
         SetText();
     }
     public float RelativeHeight() => 1f;
-    public float RelativeWidth() => 0.5f;
+    public float RelativeWidth() => 0.35f;
     public void SetRectAnchor(Vector2 min, Vector2 max)
     {
         RectTransform.anchorMin = min;
