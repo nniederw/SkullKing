@@ -28,12 +28,15 @@ public class PointsKeyboard : MonoBehaviour
         ManualInput.gameObject.SetActive(b);
         ManualInput.text = "";
     }
-    public void Select(int currentValue, string InputType, Action<int> returnInput)
+    public void Select(int? currentValue, string InputType, Action<int> returnInput)
     {
         ReturnInput = returnInput;
         Activate(true);
-        ManualInput.text = currentValue.ToString();
-        throw new NotImplementedException(); // TODO InputType
+        if (currentValue != null)
+        {
+            ManualInput.text = currentValue.ToString();
+        }
+        Debug.Log("//TODO InputType");//TODO InputType
     }
     public void ManualFieldDeselect(string input)
     {

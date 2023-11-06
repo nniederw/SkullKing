@@ -38,7 +38,7 @@ public class PointsInputField : DisplayField, IPointerDownHandler
     public void SelectField(InputType type)
     {
         ColumnNameField.Highlight();
-        PointsKeyboard.Instance.Select(Value(type), type.ToString(),i => //todo add information with string for InputType
+        PointsKeyboard.Instance.Select(Value(type), type.ToString(), i => //todo add information with string for InputType
         {
             switch (type)
             {
@@ -52,16 +52,20 @@ public class PointsInputField : DisplayField, IPointerDownHandler
             AfterInput(type);
         });
     }
-    private int Value(InputType type)
+    private int? Value(InputType type)
     {
-        switch (type)
+        try
         {
-            case InputType.Tricks:
-                return Convert.ToInt32(TricksText.text);
-            case InputType.Points:
-                return Convert.ToInt32(PointsText.text);
+            switch (type)
+            {
+                case InputType.Tricks:
+                    return Convert.ToInt32(TricksText.text);
+                case InputType.Points:
+                    return Convert.ToInt32(PointsText.text);
+            }
+            return null;
         }
-        throw new Exception($"{nameof(InputType)} had an invalid value for function {nameof(Value)}");
+        catch { return null; }
     }
     public void AfterInput(InputType lastSelected)
     {
