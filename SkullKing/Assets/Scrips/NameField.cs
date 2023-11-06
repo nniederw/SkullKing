@@ -1,36 +1,24 @@
 using System;
 using UnityEngine;
-public class NameField : MonoBehaviour, TableElement
+using UnityEngine.UI;
+[RequireComponent(typeof(Image))]
+public class NameField : DisplayField // TODO implement going to the next name with a point
 {
-    private RectTransform _RectTransform;
-    private RectTransform RectTransform
+    private Image Image = null;
+    [SerializeField] private Color HighlightColor = Color.green;
+    private Color NormalColor;
+    private void Start()
     {
-        get
-        {
-            if (_RectTransform != null) return _RectTransform;
-            _RectTransform = GetComponent<RectTransform>();
-            return _RectTransform;
-        }
+        Image = GetComponent<Image>();
+        if (Image == null) throw new Exception($"{nameof(Image)} in {nameof(NameField)} was null, f u unity");
+        NormalColor = Image.color;
     }
-    private Func<int, int, TableElement> GetElementAt;
-    private int Posi;
-    private int Posj;
-    public void Initialize(int posi, int posj, Func<int, int, TableElement> getElementAt)
+    public void Highlight()
     {
-        Posi = posi;
-        Posj = posj;
-        GetElementAt = getElementAt;
+        Image.color = HighlightColor;
     }
-    public float RelativeHeight() => 1f;
-    public float RelativeWidth() => 1f;
-    public void SetRectAnchor(Vector2 min, Vector2 max)
+    public void DeHeighlight()
     {
-        RectTransform.anchorMin = min;
-        RectTransform.anchorMax = max;
-    }
-    public void OnLocationUpdate(int newPosi, int newPosj)
-    {
-        Posi = newPosi;
-        Posj = newPosj;
+        Image.color = NormalColor;
     }
 }

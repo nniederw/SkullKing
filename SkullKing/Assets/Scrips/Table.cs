@@ -10,38 +10,25 @@ public class Table : MonoBehaviour
     public GameObject PointField;
     public GameObject RoundField;
     public GameObject NameField;
-    public GameObject EmptyField; //Todo add
-    TableElement[,] Elements;
-    //Dictionary<TableElement, (int i, int j)> ElementIndex = new Dictionary<TableElement, (int i, int j)>();
+    public GameObject EmptyField;
+    DisplayField[,] Elements;
     private void Start()
     {
+        Debug.Log("Add Total dumbass");
         BuildTable();
     }
     private void UpdateTableElements()
     {
-        //ResetIndex();
         for (int i = 0; i < Elements.GetLength(0); i++)
         {
             for (int j = 0; j < Elements.GetLength(1); j++)
             {
-                Elements[i, j].OnLocationUpdate(i, j);
+                Elements[i, j].OnLocationUpdate(i, j, Elements.GetLength(0), Elements.GetLength(1));
             }
         }
-
         //Parallel.ForEach(Elements.Cast<TableElement>(), (TableElement i) => i.OnLocationUpdate());
     }
-    /*private void ResetIndex()
-    {
-        ElementIndex.Clear();
-        for (int i = 0; i < Elements.GetLength(0); i++)
-        {
-            for (int j = 0; j < Elements.GetLength(1); j++)
-            {
-                ElementIndex.Add(Elements[i, j], (i, j));
-            }
-        }
-    }*/
-    private TableElement GetElementAt(int i, int j) => Elements[i, j];
+    private DisplayField GetElementAt(int i, int j) => Elements[i, j];
     private void SetElementsSize()
     {
         int l0 = Elements.GetLength(0);
@@ -88,50 +75,53 @@ public class Table : MonoBehaviour
     }
     private void BuildTable()
     {
-        Queue<TableElement> NameFields = new Queue<TableElement>(Players);
+        Queue<DisplayField> NameFields = new Queue<DisplayField>(Players);
         for (int i = 0; i < Players; i++)
         {
-            NameFields.Enqueue(Instantiate(NameField, transform).GetComponent<TableElement>());
-            if (NameFields.Last() == null) throw new Exception($"{nameof(NameField)} seems to have no {nameof(TableElement)} Component");
+            NameFields.Enqueue(Instantiate(NameField, transform).GetComponent<DisplayField>());
+            if (NameFields.Last() == null) throw new Exception($"{nameof(NameField)} seems to have no {nameof(DisplayField)} Component");
         }
-        Queue<TableElement> RoundFields = new Queue<TableElement>(Rounds);
+        Queue<DisplayField> RoundFields = new Queue<DisplayField>(Rounds);
         for (int i = 0; i < Rounds; i++)
         {
-            RoundFields.Enqueue(Instantiate(RoundField, transform).GetComponent<TableElement>());
-            if (RoundFields.Last() == null) throw new Exception($"{nameof(RoundField)} seems to have no {nameof(TableElement)} Component");
+            RoundFields.Enqueue(Instantiate(RoundField, transform).GetComponent<DisplayField>());
+            if (RoundFields.Last() == null) throw new Exception($"{nameof(RoundField)} seems to have no {nameof(DisplayField)} Component");
         }
-        Queue<TableElement> PointFields = new Queue<TableElement>(Rounds * Players);
+        Queue<DisplayField> PointFields = new Queue<DisplayField>(Rounds * Players);
         for (int i = 0; i < Rounds * Players; i++)
         {
-            PointFields.Enqueue(Instantiate(PointField, transform).GetComponent<TableElement>());
-            if (PointFields.Last() == null) throw new Exception($"{nameof(PointField)} seems to have no {nameof(TableElement)} Component");
+            PointFields.Enqueue(Instantiate(PointField, transform).GetComponent<DisplayField>());
+            if (PointFields.Last() == null) throw new Exception($"{nameof(PointField)} seems to have no {nameof(DisplayField)} Component");
         }
-        Elements = new TableElement[Rounds + 1, Players + 1];
-        Elements[0, 0] = Instantiate(EmptyField, transform).GetComponent<TableElement>();
-        Elements[0, 0].Initialize(0, 0, GetElementAt);
-        if (Elements[0, 0] == null) throw new Exception($"{nameof(EmptyField)} has no {nameof(TableElement)}");
+        Elements = new DisplayField[Rounds + 1, Players + 1];
+        int length0 = Elements.GetLength(0);
+        int length1 = Elements.GetLength(1);
+        Elements[0, 0] = Instantiate(EmptyField, transform).GetComponent<DisplayField>();
+        Elements[0, 0].Initialize(0, 0, length0, length1, GetElementAt);
+        if (Elements[0, 0] == null) throw new Exception($"{nameof(EmptyField)} has no {nameof(DisplayField)}");
         for (int i = 1; i < Players + 1; i++)
         {
             Elements[0, i] = NameFields.Dequeue();
-            Elements[0, i].Initialize(0, i, GetElementAt);
+            Elements[0, i].Initialize(0, i, length0, length1, GetElementAt);
         }
         for (int i = 1; i < Rounds + 1; i++)
         {
             Elements[i, 0] = RoundFields.Dequeue();
-            Elements[i, 0].Initialize(i, 0, GetElementAt);
+            Elements[i, 0].Initialize(i, 0, length0, length1, GetElementAt);
         }
         for (int i = 1; i < Rounds + 1; i++)
         {
             for (int j = 1; j < Players + 1; j++)
             {
                 Elements[i, j] = PointFields.Dequeue();
-                Elements[i, j].Initialize(i, j, GetElementAt);
+                Elements[i, j].Initialize(i, j, length0, length1, GetElementAt);
             }
         }
         SetElementsSize();
         UpdateTableElements();
     }
 }
+/*
 public interface TableElement
 {
     public void Initialize(int posi, int posj, Func<int, int, TableElement> getElementAt);
@@ -139,4 +129,41 @@ public interface TableElement
     public float RelativeHeight();
     public void OnLocationUpdate(int newPosi, int newPosj);
     public void SetRectAnchor(Vector2 min, Vector2 max);
+}*/
+public class DisplayField : MonoBehaviour
+{
+    protected int Posi;
+    protected int Posj;
+    protected int TableLength0;
+    protected int TableLength1;
+    protected Func<int, int, DisplayField> GetElementAt;
+    private RectTransform _RectTransform;
+    protected RectTransform RectTransform
+    {
+        get
+        {
+            if (_RectTransform != null) return _RectTransform;
+            _RectTransform = GetComponent<RectTransform>();
+            return _RectTransform;
+        }
+    }
+    public virtual void Initialize(int posi, int posj, int length0, int length1, Func<int, int, DisplayField> getElementAt)
+    {
+        Posi = posi;
+        Posj = posj;
+        TableLength0 = length0;
+        TableLength1 = length1;
+        GetElementAt = getElementAt;
+    }
+    public virtual float RelativeWidth() => 1f;
+    public virtual float RelativeHeight() => 1f;
+    public virtual void OnLocationUpdate(int posi, int posj, int legth0, int length1)
+    {
+        Initialize(posi, posj, legth0, length1, GetElementAt);
+    }
+    public virtual void SetRectAnchor(Vector2 min, Vector2 max)
+    {
+        RectTransform.anchorMin = min;
+        RectTransform.anchorMax = max;
+    }
 }

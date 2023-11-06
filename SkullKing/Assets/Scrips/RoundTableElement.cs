@@ -1,18 +1,8 @@
 using System;
 using TMPro;
-using UnityEngine;
-public class RoundTableElement : MonoBehaviour, TableElement
+public class RoundTableElement : DisplayField
 {
-    private RectTransform _RectTransform;
-    private RectTransform RectTransform
-    {
-        get
-        {
-            if (_RectTransform != null) return _RectTransform;
-            _RectTransform = GetComponent<RectTransform>();
-            return _RectTransform;
-        }
-    }
+
     private TMP_Text _TMP_Text;
     private TMP_Text TMP_Text
     {
@@ -23,27 +13,15 @@ public class RoundTableElement : MonoBehaviour, TableElement
             return _TMP_Text;
         }
     }
-    private Func<int, int, TableElement> GetElementAt;
-    private int Posi;
-    private int Posj;
-    public void Initialize(int posi, int posj, Func<int, int, TableElement> getElementAt)
+    public override void Initialize(int posi, int posj, int size0, int size1, Func<int, int, DisplayField> getElementAt)
     {
-        Posi = posi;
-        Posj = posj;
-        GetElementAt = getElementAt;
+        base.Initialize(posi, posj, size0, size1, getElementAt);
         SetText();
     }
-    public float RelativeHeight() => 1f;
-    public float RelativeWidth() => 0.35f;
-    public void SetRectAnchor(Vector2 min, Vector2 max)
+    public override float RelativeWidth() => 0.35f;
+    public override void OnLocationUpdate(int newPosi, int newPosj, int length0, int length1)
     {
-        RectTransform.anchorMin = min;
-        RectTransform.anchorMax = max;
-    }
-    public void OnLocationUpdate(int newPosi, int newPosj)
-    {
-        Posi = newPosi;
-        Posj = newPosj;
+        base.OnLocationUpdate(newPosi, newPosj, length0, length1);
         SetText();
     }
     private void SetText()
